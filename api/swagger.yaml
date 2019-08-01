@@ -23,6 +23,29 @@ consumes:
 produces:
 - "application/json"
 paths:
+  /users/authenticate:
+    post:
+      tags:
+      - "Auth"
+      summary: "Autenticação"
+      description: "Autenticação de Usuario"
+      operationId: "AuthUser"
+      parameters:
+      - in: "body"
+        name: "docs"
+        required: false
+        schema:
+          $ref: "#/definitions/Auth"
+      responses:
+        200:
+          description: "Cadastro efetuado com sucesso"
+          schema:
+            $ref: "#/definitions/Authenticate"
+        400:
+          description: "Email ou senha inválidos"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "Auth"
   /dailys:
     get:
       tags:
@@ -309,12 +332,151 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "HelpCenter"
+  /helps/list/ask/{page}:
+    get:
+      tags:
+      - "HelpCenterASK"
+      summary: "Lista HelpCenterASK"
+      description: "Lista HelpCenterASK"
+      operationId: "ListHelpCenterAsk"
+      parameters:
+      - name: "page"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Lista HelpCenter de pergunta"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HelpCenterASKList"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "HelpCenterASK"
+  /helps/list/answers/{idQuestion}/{page}:
+    get:
+      tags:
+      - "HelpCenterASK"
+      summary: "Procura HelpCenterASK"
+      description: "Procura HelpCenterASK (Resposta)"
+      operationId: "sendHelpCenterASKResposta"
+      parameters:
+      - name: "idQuestion"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      - name: "page"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Lista todas respostas da pergunta"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HelpCenterASKSend"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "HelpCenterASK"
+  /helps/ask/{id}:
+    get:
+      tags:
+      - "HelpCenterASK"
+      summary: "Procura HelpCenterASK"
+      description: "Procura HelpCenterASK (Resposta)"
+      operationId: "sendHelpCenterASK"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Lista HelpCenterASK"
+          schema:
+            $ref: "#/definitions/HelpCenterASKSend"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "HelpCenterASK"
 securityDefinitions:
   Bearer:
     type: "apiKey"
     name: "Authorization"
     in: "header"
 definitions:
+  Auth:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "batata@gmail.com"
+      password:
+        type: "string"
+        example: "123123"
+    example:
+      password: "123123"
+      email: "batata@gmail.com"
+  Authenticate:
+    type: "object"
+    properties:
+      isAdmin:
+        type: "boolean"
+        example: false
+      _id:
+        type: "string"
+        example: "5d33fcb3fa5500198847300d"
+      name:
+        type: "string"
+        example: "João P"
+      lastName:
+        type: "string"
+        example: "batata"
+      userName:
+        type: "string"
+        example: "batata"
+      email:
+        type: "string"
+        example: "batata@gmail.com"
+      dateOfBirth:
+        type: "string"
+        format: "date-time"
+      password:
+        type: "string"
+        example: "a6361743ee6a60423a1879014f38fe37d363c840adc9e37deb5609c32fc8f2ea"
+      createdAt:
+        type: "string"
+        format: "date-time"
+    example:
+      lastName: "batata"
+      createdAt: "2000-01-23T04:56:07.000+00:00"
+      password: "a6361743ee6a60423a1879014f38fe37d363c840adc9e37deb5609c32fc8f2ea"
+      name: "João P"
+      dateOfBirth: "2000-01-23T04:56:07.000+00:00"
+      isAdmin: false
+      _id: "5d33fcb3fa5500198847300d"
+      userName: "batata"
+      email: "batata@gmail.com"
   Daily:
     type: "object"
     properties:
@@ -447,3 +609,59 @@ definitions:
       id_user: "5d30b2610ae9530036eec2ae"
       title: "Deploy"
       desc: "Deploy do azure não funciona bem da erro no compilador, no express"
+  HelpCenterASKList:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "5d30b35a0ae9530036eec2b1"
+      desc:
+        type: "string"
+        example: "Não sei."
+      date:
+        type: "string"
+        format: "date-time"
+      id_user:
+        type: "string"
+        example: "5d30b01b0ae9530036eec2a4"
+      id_helpCenter:
+        type: "string"
+        example: "5d30b2610ae9530036eec2ae"
+      help:
+        type: "string"
+        example: "help"
+      owner:
+        type: "string"
+        example: "Willian Froes"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      owner: "Willian Froes"
+      help: "help"
+      _id: "5d30b35a0ae9530036eec2b1"
+      id_user: "5d30b01b0ae9530036eec2a4"
+      id_helpCenter: "5d30b2610ae9530036eec2ae"
+      desc: "Não sei."
+  HelpCenterASKSend:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "5d30b35a0ae9530036eec2b1"
+      id_user:
+        type: "string"
+        example: "5d30b01b0ae9530036eec2a4"
+      id_helpCenter:
+        type: "string"
+        example: "5d30b2610ae9530036eec2ae"
+      desc:
+        type: "string"
+        example: "Não sei."
+      date:
+        type: "string"
+        format: "date-time"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      _id: "5d30b35a0ae9530036eec2b1"
+      id_user: "5d30b01b0ae9530036eec2a4"
+      id_helpCenter: "5d30b2610ae9530036eec2ae"
+      desc: "Não sei."

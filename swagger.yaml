@@ -1,0 +1,620 @@
+swagger: '2.0'
+
+schemes:
+  - http
+  - https
+
+host: reborn100contrato.azurewebsites.net
+# basePath: /bytebank-api/v1
+
+info:
+  version: 1.0.0
+  title: Sem Contrato Api
+  description: Criar novas dailyes, listar e fazer perguntas no HelpCenter
+  # termsOfService: http://localhost:8085/bytebank-api/v1/termo-uso
+  contact:
+    name: Suporte
+    # url: http://localhost:8085/bytebank-api/v1/suporte
+    email: felipe.santos@compasso.com.br
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+tags:
+  - name: Auth
+  - name: Configuration
+  - name: Daily
+  - name: HelpCenter
+  - name: HelpCenterASK
+  - name: User
+  
+
+paths:
+
+  '/users/authenticate':
+    post:
+      tags:
+        - Auth
+      summary: Autenticação
+      description: Autenticação de Usuario
+      operationId: AuthUser
+      parameters:
+        - in: body
+          name: docs
+          schema:
+              $ref: '#/definitions/Auth'
+      responses:
+        200:
+          description: Cadastro efetuado com sucesso
+          schema:
+            $ref: '#/definitions/Authenticate'
+        400:
+          description: Email ou senha inválidos
+        500:
+          description: Erro interno no servidor
+  
+  '/dailys':
+    get:
+      tags:
+        - Daily
+      summary: Lista todas Dailyes
+      description: Lista as ultimas 10 daily cadastradas
+      operationId: listaTodasDaily
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+      responses:
+        201:
+          description: Cadastro efetuado com sucesso
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Daily'
+        401:
+          description: Token Inválido
+        500:
+          description: Erro interno no servidor
+
+  '/dailys/{id}':
+    get:
+      tags:
+        - Daily
+      summary: Procura por ID Daily
+      description: Procura por ID Daily
+      operationId: sendDaily
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Cadastro efetuado com sucesso
+          schema:
+              $ref: '#/definitions/Daily'
+        400:
+          description: Houve Algum problema na hora de mostrar os dados da daily favor olhar o log
+        401:
+          description: Token Inválido
+        500:
+          description: Erro interno no servidor
+          
+  '/dailys/user/{id}':
+    get:
+      tags:
+        - Daily
+      summary: Procura por ID do Usuerio
+      description: Verifica se a daily já foi cadastrada ou não
+      operationId: sendUserDaily
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: ""
+        400:
+          description: Você já cadastrou sua daily
+        401:
+          description: Token Inválido
+        500:
+          description: Erro interno no servidor
+          
+  '/dailys/list/{date}/{page}':
+    get:
+      tags:
+        - Daily
+      summary: Lista Dailyes do dia
+      description: Lista as dailys do dia
+      operationId: listaDailyDia
+      security:
+        - Bearer: []
+      parameters:
+        - in: path
+          name: date
+          type: string
+          format: date
+          required: true
+        - in: path
+          name: page
+          type: integer
+          format: int64
+          required: true
+        - in: body
+          name: docs
+          schema:
+              $ref: '#/definitions/Daily'
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Daily'
+        500:
+          description: Erro interno no servidor
+          
+  '/dailys/daily/':
+    post:
+      tags:
+        - Daily
+      summary: Cadastrar Daily
+      description: Cadastrar Daily do dia
+      operationId: cadastrarDailyDia
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+        - in: body
+          name: docs
+          required: true
+          schema:
+              $ref: '#/definitions/DailyCadastro'
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            $ref: '#/definitions/Daily'
+        400:
+          description: USUARIO não existente
+        500:
+          description: Erro interno no servidor
+          
+  '/dailys/daily/{id}':
+    put:
+      tags:
+        - Daily
+      summary: Atualiza Daily
+      description: Atualizar Daily
+      operationId: atualizarDailyDia
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+        - in: body
+          name: docs
+          required: true
+          schema:
+              $ref: '#/definitions/DailyEditar'
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            $ref: '#/definitions/Daily'
+        400:
+          description: USUARIO não existente
+        500:
+          description: Erro interno no servidor
+          
+  '/helps/list/post/{page}':
+    get:
+      tags:
+        - HelpCenter
+      summary: Lista HelpCenter
+      description: Lista HelpCenter Paginada
+      operationId: ListaHelpCenter
+      parameters:
+        - in: path
+          name: page
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HelpCenterList'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor
+            
+  '/helps/list/{id}':
+    get:
+      tags:
+        - HelpCenter
+      summary: Lista HelpCenter
+      description: Procura HelpCenter
+      operationId: sendHelpCenter
+      parameters:
+          - in: path
+            name: id
+            type: integer
+            format: int64
+            required: true
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            $ref: '#/definitions/HelpCenterAddResp'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor        
+
+  '/helps/post/':
+    post:
+      tags:
+        - HelpCenter
+      summary: Cadastra HelpCenter
+      description: Cadastra HelpCenter Paginada
+      operationId: CadastraHelpCenter
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+        - in: body
+          name: docs
+          required: true
+          schema:
+              $ref: '#/definitions/HelpCenterAdd'
+      responses:
+        200:
+          description: Lista daily do dia
+          schema:
+            $ref: '#/definitions/HelpCenterAddResp'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor
+          
+  '/helps/post/{id}':
+    delete:
+      tags:
+        - HelpCenter
+      summary: Deletar HelpCenter
+      description: Deletar HelpCenter 
+      operationId: DeleteHelpCenter
+      security:
+        - Bearer: []
+      parameters:
+        - in: header
+          name: authorization
+          type: string
+          required: true
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Deletado
+          schema:
+            $ref: '#/definitions/HelpCenterAddResp'
+        401:
+          description: Token Inválido
+        500:
+          description: Não é ADMIN
+  
+  '/helps/list/ask/{page}':
+    get:
+      tags:
+        - HelpCenterASK
+      summary: Lista HelpCenterASK
+      description: Lista HelpCenterASK 
+      operationId: ListHelpCenterAsk
+      parameters:
+        - in: path
+          name: page
+          type: integer
+          format: int64
+          required: true
+      responses:
+        200:
+          description: Lista HelpCenter de pergunta
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HelpCenterASKList'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor
+  
+  '/helps/list/answers/{idQuestion}/{page}':
+    get:
+      tags:
+        - HelpCenterASK
+      summary: Procura HelpCenterASK 
+      description: Procura HelpCenterASK (Resposta)
+      operationId: sendHelpCenterASKResposta
+      parameters:
+          - in: path
+            name: idQuestion
+            type: integer
+            format: int64
+            required: true
+          - in: path
+            name: page
+            type: integer
+            format: int64
+            required: true
+      responses:
+        200:
+          description: Lista todas respostas da pergunta
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/HelpCenterASKSend'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor
+          
+  '/helps/ask/{id}':
+    get:
+      tags:
+        - HelpCenterASK
+      summary: Procura HelpCenterASK
+      description: Procura HelpCenterASK (Resposta)
+      operationId: sendHelpCenterASK
+      security:
+        - Bearer: []
+      parameters:
+          - in: header
+            name: authorization
+            type: string
+            required: true
+          - in: path
+            name: id
+            type: integer
+            format: int64
+            required: true
+      responses:
+        200:
+          description: Lista HelpCenterASK
+          schema:
+            $ref: '#/definitions/HelpCenterASKSend'
+        400:
+          description: Houve Algum problema na hora de listar o usuario favor olhar o log
+        500:
+          description: Erro interno no servidor    
+
+
+definitions:
+  Auth:
+    type: object
+    properties:
+      email:
+        type: string
+        example: batata@gmail.com
+      password:
+        type: string
+        example: 123123
+        
+  Authenticate:
+    type: object
+    properties:
+      isAdmin:
+        type: boolean
+        example: false
+      _id:
+        type: string
+        example: 5d33fcb3fa5500198847300d       
+      name:
+        type: string
+        example: João P        
+      lastName:
+        type: string
+        example: batata      
+      userName:
+        type: string
+        example: batata     
+      email:
+        type: string
+        example: batata@gmail.com  
+      dateOfBirth:
+        type: string
+        format: date-time
+      password:
+        type: string
+        example: a6361743ee6a60423a1879014f38fe37d363c840adc9e37deb5609c32fc8f2ea
+      createdAt:
+        type: string
+        format: date-time
+      
+  Daily:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 5d41ca343c941f3bf0fddcf2
+      id_user:
+        type: string
+        example: 5d41c9b63c941f3bf0fddcf1
+      yesterday:
+        type: string
+        example: Testes e correções de bugs.
+      today:
+        type: string
+        example: Testes e desenvolvimento.
+      impediment:
+        type: string
+        example: Nenhum impedimento.
+      date:
+        type: string
+        format: date-time
+        
+  DailyCadastro:
+    type: object
+    properties:
+      email:
+        type: string
+        example: teste@gmail.com
+      yesterday:
+        type: string
+        example: Testes e correções de bugs.
+      today:
+        type: string
+        example: Testes e desenvolvimento.
+      impediment:
+        type: string
+        example: Nenhum impedimento.
+
+  DailyEditar:
+    type: object
+    properties:
+      yesterday:
+        type: string
+        example: Testes e correções de bugs.
+      today:
+        type: string
+        example: Testes e desenvolvimento.
+      impediment:
+        type: string
+        example: Nenhum impedimento.
+        
+  HelpCenterList:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 5d30b2610ae9530036eec2ae
+      title:
+        type: string
+        example: Deploy
+      desc:
+        type: string
+        example: Deploy do azure não funciona bem da erro no compilador, no express
+      date:
+        type: string
+        format: date-time
+      id_user:
+        type: string
+        example: 5d30b1110ae9530036eec2a9
+      owner:
+        type: string
+        example: Felipe Santos
+   
+  HelpCenterAdd:
+    type: object
+    properties:
+      id_user:
+        type: string
+        example: 5d30b2610ae9530036eec2ae
+      title:
+        type: string
+        example: Deploy
+      desc:
+        type: string
+        example: Deploy do azure não funciona bem da erro no compilador, no express
+   
+  HelpCenterAddResp:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 5d432d50a6d90d38c44061e6
+      id_user:
+        type: string
+        example: 5d30b2610ae9530036eec2ae
+      title:
+        type: string
+        example: Deploy
+      desc:
+        type: string
+        example: Deploy do azure não funciona bem da erro no compilador, no express
+      date:
+        type: string
+        format: date-time
+        
+  HelpCenterASKList:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 5d30b35a0ae9530036eec2b1
+      desc:
+        type: string
+        example: Não sei.
+      date:
+        type: string
+        format: date-time
+      id_user:
+        type: string
+        example: 5d30b01b0ae9530036eec2a4
+      id_helpCenter:
+        type: string
+        example: 5d30b2610ae9530036eec2ae
+      help:
+        type: string
+        example: help
+      owner:
+        type: string
+        example: Willian Froes
+        
+  HelpCenterASKSend:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 5d30b35a0ae9530036eec2b1
+      id_user:
+        type: string
+        example: 5d30b01b0ae9530036eec2a4
+      id_helpCenter:
+        type: string
+        example: 5d30b2610ae9530036eec2ae
+      desc:
+        type: string
+        example: Não sei.
+      date:
+        type: string
+        format: date-time
