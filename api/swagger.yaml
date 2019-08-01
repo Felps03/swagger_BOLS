@@ -1,0 +1,127 @@
+---
+swagger: "2.0"
+info:
+  description: "Criar novas dailyes, listar e fazer perguntas no HelpCenter"
+  version: "1.0.0"
+  title: "Sem Contrato Api"
+  contact:
+    name: "Suporte"
+    email: "felipe.santos@compasso.com.br"
+host: "reborn100contrato.azurewebsites.net"
+tags:
+- name: "Auth"
+- name: "Configuration"
+- name: "Daily"
+- name: "HelpCenter"
+- name: "HelpCenterASK"
+- name: "User"
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /dailys:
+    get:
+      tags:
+      - "Daily"
+      summary: "Lista todas Dailyes"
+      description: "Lista as ultimas 10 daily cadastradas"
+      operationId: "listaTodasDaily"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "docs"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/Daily"
+      responses:
+        201:
+          description: "Cadastro efetuado com sucesso"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Daily"
+        401:
+          description: "Token Inválido"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Daily"
+  /dailys/list/{date}/{page}:
+    get:
+      tags:
+      - "Daily"
+      summary: "Lista Dailyes do dia"
+      description: "Lista as dailys do dia"
+      operationId: "listaDailyDia"
+      parameters:
+      - name: "date"
+        in: "path"
+        required: true
+        type: "string"
+        format: "date"
+      - name: "page"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "docs"
+        required: false
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/Daily"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Daily"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "Daily"
+securityDefinitions:
+  Bearer:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+definitions:
+  Daily:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "5d41ca343c941f3bf0fddcf2"
+      id_user:
+        type: "string"
+        example: "5d41c9b63c941f3bf0fddcf1"
+      yesterday:
+        type: "string"
+        example: "Testes e correções de bugs."
+      today:
+        type: "string"
+        example: "Testes e desenvolvimento."
+      impediment:
+        type: "string"
+        example: "Nenhum impedimento."
+      date:
+        type: "string"
+        format: "date-time"
+    example:
+      yesterday: "Testes e correções de bugs."
+      date: "2000-01-23T04:56:07.000+00:00"
+      today: "Testes e desenvolvimento."
+      impediment: "Nenhum impedimento."
+      _id: "5d41ca343c941f3bf0fddcf2"
+      id_user: "5d41c9b63c941f3bf0fddcf1"
