@@ -35,13 +35,6 @@ paths:
         in: "header"
         required: true
         type: "string"
-      - in: "body"
-        name: "docs"
-        required: false
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/Daily"
       responses:
         201:
           description: "Cadastro efetuado com sucesso"
@@ -74,13 +67,6 @@ paths:
         required: true
         type: "integer"
         format: "int64"
-      - in: "body"
-        name: "docs"
-        required: false
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/Daily"
       responses:
         200:
           description: "Lista daily do dia"

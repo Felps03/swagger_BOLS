@@ -7,10 +7,9 @@
  *
  * date date 
  * page Long 
- * docs List  (optional)
  * returns List
  **/
-exports.listaDailyDia = function(date,page,docs) {
+exports.listaDailyDia = function(date,page) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ {
@@ -42,10 +41,9 @@ exports.listaDailyDia = function(date,page,docs) {
  * Lista as ultimas 10 daily cadastradas
  *
  * authorization String 
- * docs List  (optional)
  * returns List
  **/
-exports.listaTodasDaily = function(authorization,docs) {
+exports.listaTodasDaily = function(authorization) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ {
