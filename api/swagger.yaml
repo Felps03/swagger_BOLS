@@ -49,6 +49,61 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Daily"
+  /dailys/{id}:
+    get:
+      tags:
+      - "Daily"
+      summary: "Procura por ID Daily"
+      description: "Procura por ID Daily"
+      operationId: "sendDaily"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Cadastro efetuado com sucesso"
+          schema:
+            $ref: "#/definitions/Daily"
+        400:
+          description: "Houve Algum problema na hora de mostrar os dados da daily\
+            \ favor olhar o log"
+        401:
+          description: "Token Inválido"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Daily"
+  /dailys/user/{id}:
+    get:
+      tags:
+      - "Daily"
+      summary: "Procura por ID do Usuerio"
+      description: "Verifica se a daily já foi cadastrada ou não"
+      operationId: "sendUserDaily"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: ""
+        400:
+          description: "Você já cadastrou sua daily"
+        401:
+          description: "Token Inválido"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "Daily"
   /dailys/list/{date}/{page}:
     get:
       tags:
@@ -67,6 +122,11 @@ paths:
         required: true
         type: "integer"
         format: "int64"
+      - in: "body"
+        name: "docs"
+        required: false
+        schema:
+          $ref: "#/definitions/Daily"
       responses:
         200:
           description: "Lista daily do dia"
@@ -76,7 +136,179 @@ paths:
               $ref: "#/definitions/Daily"
         500:
           description: "Erro interno no servidor"
+      security:
+      - Bearer: []
       x-swagger-router-controller: "Daily"
+  /dailys/daily/:
+    post:
+      tags:
+      - "Daily"
+      summary: "Cadastrar Daily"
+      description: "Cadastrar Daily do dia"
+      operationId: "cadastrarDailyDia"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "docs"
+        required: true
+        schema:
+          $ref: "#/definitions/DailyCadastro"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            $ref: "#/definitions/Daily"
+        400:
+          description: "USUARIO não existente"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "Daily"
+  /dailys/daily/{id}:
+    put:
+      tags:
+      - "Daily"
+      summary: "Atualiza Daily"
+      description: "Atualizar Daily"
+      operationId: "atualizarDailyDia"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "docs"
+        required: true
+        schema:
+          $ref: "#/definitions/DailyEditar"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            $ref: "#/definitions/Daily"
+        400:
+          description: "USUARIO não existente"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Daily"
+  /helps/list/post/{page}:
+    get:
+      tags:
+      - "HelpCenter"
+      summary: "Lista HelpCenter"
+      description: "Lista HelpCenter Paginada"
+      operationId: "ListaHelpCenter"
+      parameters:
+      - name: "page"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HelpCenterList"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "HelpCenter"
+  /helps/list/{id}:
+    get:
+      tags:
+      - "HelpCenter"
+      summary: "Lista HelpCenter"
+      description: "Procura HelpCenter"
+      operationId: "sendHelpCenter"
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            $ref: "#/definitions/HelpCenterAddResp"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      x-swagger-router-controller: "HelpCenter"
+  /helps/post/:
+    post:
+      tags:
+      - "HelpCenter"
+      summary: "Cadastra HelpCenter"
+      description: "Cadastra HelpCenter Paginada"
+      operationId: "CadastraHelpCenter"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "docs"
+        required: true
+        schema:
+          $ref: "#/definitions/HelpCenterAdd"
+      responses:
+        200:
+          description: "Lista daily do dia"
+          schema:
+            $ref: "#/definitions/HelpCenterAddResp"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "HelpCenter"
+  /helps/post/{id}:
+    delete:
+      tags:
+      - "HelpCenter"
+      summary: "Deletar HelpCenter"
+      description: "Deletar HelpCenter"
+      operationId: "DeleteHelpCenter"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - name: "id"
+        in: "path"
+        required: true
+        type: "integer"
+        format: "int64"
+      responses:
+        200:
+          description: "Deletado"
+          schema:
+            $ref: "#/definitions/HelpCenterAddResp"
+        401:
+          description: "Token Inválido"
+        500:
+          description: "Não é ADMIN"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "HelpCenter"
 securityDefinitions:
   Bearer:
     type: "apiKey"
@@ -111,3 +343,107 @@ definitions:
       impediment: "Nenhum impedimento."
       _id: "5d41ca343c941f3bf0fddcf2"
       id_user: "5d41c9b63c941f3bf0fddcf1"
+  DailyCadastro:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+        example: "teste@gmail.com"
+      yesterday:
+        type: "string"
+        example: "Testes e correções de bugs."
+      today:
+        type: "string"
+        example: "Testes e desenvolvimento."
+      impediment:
+        type: "string"
+        example: "Nenhum impedimento."
+    example:
+      yesterday: "Testes e correções de bugs."
+      today: "Testes e desenvolvimento."
+      impediment: "Nenhum impedimento."
+      email: "teste@gmail.com"
+  DailyEditar:
+    type: "object"
+    properties:
+      yesterday:
+        type: "string"
+        example: "Testes e correções de bugs."
+      today:
+        type: "string"
+        example: "Testes e desenvolvimento."
+      impediment:
+        type: "string"
+        example: "Nenhum impedimento."
+    example:
+      yesterday: "Testes e correções de bugs."
+      today: "Testes e desenvolvimento."
+      impediment: "Nenhum impedimento."
+  HelpCenterList:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "5d30b2610ae9530036eec2ae"
+      title:
+        type: "string"
+        example: "Deploy"
+      desc:
+        type: "string"
+        example: "Deploy do azure não funciona bem da erro no compilador, no express"
+      date:
+        type: "string"
+        format: "date-time"
+      id_user:
+        type: "string"
+        example: "5d30b1110ae9530036eec2a9"
+      owner:
+        type: "string"
+        example: "Felipe Santos"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      owner: "Felipe Santos"
+      _id: "5d30b2610ae9530036eec2ae"
+      id_user: "5d30b1110ae9530036eec2a9"
+      title: "Deploy"
+      desc: "Deploy do azure não funciona bem da erro no compilador, no express"
+  HelpCenterAdd:
+    type: "object"
+    properties:
+      id_user:
+        type: "string"
+        example: "5d30b2610ae9530036eec2ae"
+      title:
+        type: "string"
+        example: "Deploy"
+      desc:
+        type: "string"
+        example: "Deploy do azure não funciona bem da erro no compilador, no express"
+    example:
+      id_user: "5d30b2610ae9530036eec2ae"
+      title: "Deploy"
+      desc: "Deploy do azure não funciona bem da erro no compilador, no express"
+  HelpCenterAddResp:
+    type: "object"
+    properties:
+      _id:
+        type: "string"
+        example: "5d432d50a6d90d38c44061e6"
+      id_user:
+        type: "string"
+        example: "5d30b2610ae9530036eec2ae"
+      title:
+        type: "string"
+        example: "Deploy"
+      desc:
+        type: "string"
+        example: "Deploy do azure não funciona bem da erro no compilador, no express"
+      date:
+        type: "string"
+        format: "date-time"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      _id: "5d432d50a6d90d38c44061e6"
+      id_user: "5d30b2610ae9530036eec2ae"
+      title: "Deploy"
+      desc: "Deploy do azure não funciona bem da erro no compilador, no express"
