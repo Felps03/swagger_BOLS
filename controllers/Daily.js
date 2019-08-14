@@ -3,6 +3,18 @@
 var utils = require('../utils/writer.js');
 var Daily = require('../service/DailyService');
 
+module.exports.adminListaDailyDia = function adminListaDailyDia (req, res, next) {
+  var authorization = req.swagger.params['authorization'].value;
+  var docs = req.swagger.params['docs'].value;
+  Daily.adminListaDailyDia(authorization,docs)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
 module.exports.atualizarDailyDia = function atualizarDailyDia (req, res, next) {
   var authorization = req.swagger.params['authorization'].value;
   var id = req.swagger.params['id'].value;

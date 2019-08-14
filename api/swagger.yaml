@@ -10,13 +10,12 @@ info:
 host: "reborn100contrato.azurewebsites.net"
 tags:
 - name: "Auth"
+- name: "User"
 - name: "Configuration"
 - name: "Daily"
 - name: "HelpCenter"
 - name: "HelpCenterASK"
-- name: "User"
 schemes:
-- "http"
 - "https"
 consumes:
 - "application/json"
@@ -46,6 +45,32 @@ paths:
         500:
           description: "Erro interno no servidor"
       x-swagger-router-controller: "Auth"
+  /admin/export/users:
+    get:
+      tags:
+      - "User"
+      summary: "Lista todos Usuarios"
+      description: "Lista todos os Usuario cadastrado do BD"
+      operationId: "UserExport"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Cadastro efetuado com sucesso"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Authenticate"
+        400:
+          description: "Email ou senha inválidos"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "User"
   /dailys:
     get:
       tags:
@@ -223,6 +248,35 @@ paths:
       security:
       - Bearer: []
       x-swagger-router-controller: "Daily"
+  /admin/export/daylies:
+    get:
+      tags:
+      - "Daily"
+      summary: "Lista Todas DAYLIES do Banco"
+      description: "Lista Todas DAYLIES do Banco precisa ser Admin"
+      operationId: "AdminListaDailyDia"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "docs"
+        required: false
+        schema:
+          $ref: "#/definitions/Daily"
+      responses:
+        200:
+          description: "Lista todas Daily"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Daily"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "Daily"
   /helps/list/post/{page}:
     get:
       tags:
@@ -389,6 +443,33 @@ paths:
         500:
           description: "Erro interno no servidor"
       x-swagger-router-controller: "HelpCenterASK"
+  /admin/export/helpCenter:
+    get:
+      tags:
+      - "HelpCenter"
+      summary: "Lista Todas HelpCenter"
+      description: "Lista Todas HelpCenter precisa ser admin"
+      operationId: "AdminListaHelpCenter"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Lista Todas HelpCenter do Banco"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HelpCenterAddResp"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "HelpCenter"
   /helps/ask/{id}:
     get:
       tags:
@@ -411,6 +492,33 @@ paths:
           description: "Lista HelpCenterASK"
           schema:
             $ref: "#/definitions/HelpCenterASKSend"
+        400:
+          description: "Houve Algum problema na hora de listar o usuario favor olhar\
+            \ o log"
+        500:
+          description: "Erro interno no servidor"
+      security:
+      - Bearer: []
+      x-swagger-router-controller: "HelpCenterASK"
+  /admin/export/helpCenterAnswer:
+    get:
+      tags:
+      - "HelpCenterASK"
+      summary: "Lista Todas HelpCenterASK"
+      description: "Lista Todas HelpCenterASK precisa ser admin"
+      operationId: "AdminListaHelpCenterASK"
+      parameters:
+      - name: "authorization"
+        in: "header"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Lista Todas HelpCenter do Banco"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HelpCenterASKList"
         400:
           description: "Houve Algum problema na hora de listar o usuario favor olhar\
             \ o log"

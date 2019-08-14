@@ -3,6 +3,17 @@
 var utils = require('../utils/writer.js');
 var HelpCenter = require('../service/HelpCenterService');
 
+module.exports.adminListaHelpCenter = function adminListaHelpCenter (req, res, next) {
+  var authorization = req.swagger.params['authorization'].value;
+  HelpCenter.adminListaHelpCenter(authorization)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
 module.exports.cadastraHelpCenter = function cadastraHelpCenter (req, res, next) {
   var authorization = req.swagger.params['authorization'].value;
   var docs = req.swagger.params['docs'].value;

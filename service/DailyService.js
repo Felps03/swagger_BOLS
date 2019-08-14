@@ -2,6 +2,41 @@
 
 
 /**
+ * Lista Todas DAYLIES do Banco
+ * Lista Todas DAYLIES do Banco precisa ser Admin
+ *
+ * authorization String 
+ * docs Daily  (optional)
+ * returns List
+ **/
+exports.adminListaDailyDia = function(authorization,docs) {
+  return new Promise(function(resolve, reject) {
+    var examples = {};
+    examples['application/json'] = [ {
+  "yesterday" : "Testes e correções de bugs.",
+  "date" : "2000-01-23T04:56:07.000+00:00",
+  "today" : "Testes e desenvolvimento.",
+  "impediment" : "Nenhum impedimento.",
+  "_id" : "5d41ca343c941f3bf0fddcf2",
+  "id_user" : "5d41c9b63c941f3bf0fddcf1"
+}, {
+  "yesterday" : "Testes e correções de bugs.",
+  "date" : "2000-01-23T04:56:07.000+00:00",
+  "today" : "Testes e desenvolvimento.",
+  "impediment" : "Nenhum impedimento.",
+  "_id" : "5d41ca343c941f3bf0fddcf2",
+  "id_user" : "5d41c9b63c941f3bf0fddcf1"
+} ];
+    if (Object.keys(examples).length > 0) {
+      resolve(examples[Object.keys(examples)[0]]);
+    } else {
+      resolve();
+    }
+  });
+}
+
+
+/**
  * Atualiza Daily
  * Atualizar Daily
  *

@@ -2,6 +2,38 @@
 
 
 /**
+ * Lista Todas HelpCenter
+ * Lista Todas HelpCenter precisa ser admin
+ *
+ * authorization String 
+ * returns List
+ **/
+exports.adminListaHelpCenter = function(authorization) {
+  return new Promise(function(resolve, reject) {
+    var examples = {};
+    examples['application/json'] = [ {
+  "date" : "2000-01-23T04:56:07.000+00:00",
+  "_id" : "5d432d50a6d90d38c44061e6",
+  "id_user" : "5d30b2610ae9530036eec2ae",
+  "title" : "Deploy",
+  "desc" : "Deploy do azure não funciona bem da erro no compilador, no express"
+}, {
+  "date" : "2000-01-23T04:56:07.000+00:00",
+  "_id" : "5d432d50a6d90d38c44061e6",
+  "id_user" : "5d30b2610ae9530036eec2ae",
+  "title" : "Deploy",
+  "desc" : "Deploy do azure não funciona bem da erro no compilador, no express"
+} ];
+    if (Object.keys(examples).length > 0) {
+      resolve(examples[Object.keys(examples)[0]]);
+    } else {
+      resolve();
+    }
+  });
+}
+
+
+/**
  * Cadastra HelpCenter
  * Cadastra HelpCenter Paginada
  *
